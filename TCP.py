@@ -8,11 +8,10 @@ import sys # Import modul sys
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Inisialisasi socket
 serverPort = 8080 # Inisialisasi port
 serverSocket.bind(('',serverPort)) # Mengkaitkan server IP dan server port
-serverSocket.listen(1) # Mendengarkan permintaan koneksi TCP dari klien dengan parameter jumlah maksimum koneksi setidaknya 1
-serverJalan = True # Variabel agar server tetap berjalan
+serverSocket.listen(1) # Mendengarkan permintaan koneksi TCP dari klien dengan parameter jumlah maksimum koneksi setidaknya 
 
 
-while serverJalan: # Saat alamat dan port bernilai benar maka perulangan akan terus dilakukan
+while True: # Saat alamat dan port bernilai benar maka perulangan akan terus dilakukan
     # No 2 Program web server dapat menerima dan memparsing HTTP request yang dikirimkan oleh browser
     print('Server telah siap...') # Mencetak string 'Server telah siap' sebagai tanda server siap atau berjalan
     
@@ -37,19 +36,18 @@ while serverJalan: # Saat alamat dan port bernilai benar maka perulangan akan te
         for i in range(0, len(outputdata)):
             # No 5 Web server dapat mengirimkan response message yang sudah dibuat ke browser (client) dan dapat ditampilkan dengan benar di sisi client
             connectionSocket.send(outputdata[i].encode()) # Mengirim respon konten file yang telah di encode
-        connectionSocket.send("\r\n".encode())
+        connectionSocket.send("\r\n".encode()) 
 
-        #connectionSocket.close() # Menutup koneksi
+        connectionSocket.close() # Menutup koneksi
         
     except IOError:
         # No 6 Jika file yang diminta oleh client tidak tersedia, web server dapat mengirimkan pesan “404 Not Found” dan dapat ditampilkan dengan benar di sisi client.
-        connectionSocket.send(b'HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n')
+        connectionSocket.send(b'HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n') # Mengirim respon header jika file yang diminta tidak tersedia
         errorMessage = '<html><head></head><body><h1>404 Not Found</h1></body></html>\r\n' # Inisialisasi error message 
         connectionSocket.send(errorMessage.encode()) # Mengirim respon error Message
         
         #Close client socket
         connectionSocket.close() # Menutup koneksi soket
-        serverJalan = False # Jika Server memasuki kondisi IOError maka ia akan mengubah variabel serverJalan agar Keluar dari perulangan dan Menutup server
 
     
 serverSocket.close() # Menutup server soket
